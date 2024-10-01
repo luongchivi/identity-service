@@ -4,6 +4,8 @@ server:
     context-path: /identity
 
 spring:
+  application:
+    name: identity-service
   datasource:
     url: "jdbc:mysql://localhost:3306/identity_service"
     username: root
@@ -15,3 +17,11 @@ spring:
 
 jwt:
   signerKey: "XbMzESgyD0cAdQVJ4QpQ/Jrc4fo3gyzAyd0AnbvNKT8noPFU+A2CWKEGRXMxI8ig"
+
+#logging:
+#  level:
+#    root: DEBUG  # Thiết lập mức log mặc định cho toàn ứng dụng là DEBUG
+#    org.springframework: DEBUG  # Log chi tiết cho các lớp của Spring framework
+#    com.luongchivi: DEBUG  # Log chi tiết cho package của bạn
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n%wEx"  # Định dạng log và in chi tiết stack trace khi có lỗi

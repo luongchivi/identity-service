@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Value("${jwt.signerKey}")
@@ -41,13 +43,16 @@ public class SecurityConfig {
 
         httpSecurity.oauth2ResourceServer(
                 oauth2 -> oauth2.jwt(
-                        jwtConfigurer ->
-                                jwtConfigurer.decoder(jwtDecoder())
-                                        .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
+                        jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationFailureHandler())
         );
 
         httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
+
+        httpSecurity.exceptionHandling(exceptionHandling ->
+                exceptionHandling.accessDeniedHandler(new JwtAccessDeniedHandler())
+        );
 
         return httpSecurity.build();
     }
@@ -77,4 +82,26 @@ public class SecurityConfig {
 
         return jwtAuthenticationConverter;
     }
+
+//    @Bean
+//    public AccessDeniedHandler accessDeniedHandler() {
+//        return new AccessDeniedHandler() {
+//            @Override
+//            public void handle(HttpServletRequest request,
+//                               HttpServletResponse response,
+//                               AccessDeniedException accessDeniedException) throws IOException {
+//                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+//                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//
+//                ErrorCode errorCode = ErrorCode.UNAUTHORIZED; // Lấy mã lỗi tương ứng
+//
+//                Map<String, Object> jsonResponse = new HashMap<>();
+//                jsonResponse.put("code", errorCode.getCode());
+//                jsonResponse.put("message", errorCode.getMessage());
+//
+//                // Chuyển đổi Map thành JSON và ghi vào phản hồi
+//                new ObjectMapper().writeValue(response.getWriter(), jsonResponse);
+//            }
+//        };
+//    }
 }

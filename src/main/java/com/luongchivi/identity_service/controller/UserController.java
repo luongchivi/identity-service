@@ -33,6 +33,11 @@ public class UserController {
         return userService.getUsers();
     }
 
+    @GetMapping("/info")
+    public UserResponse getUserInfo() {
+        return userService.getUserInfo();
+    }
+
     @GetMapping("/{userId}")
     public UserResponse getUser(@PathVariable("userId") String userId) {
         return userService.getUser(userId);
