@@ -1,0 +1,44 @@
+package com.luongchivi.identity_service.controller;
+
+import com.luongchivi.identity_service.dto.request.permission.PermissionRequest;
+import com.luongchivi.identity_service.dto.response.permission.PermissionResponse;
+import com.luongchivi.identity_service.service.PermissionService;
+import com.luongchivi.identity_service.share.response.ApiResponse;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/permissions")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+public class PermissionController {
+    PermissionService permissionService;
+
+    @PostMapping()
+    public ApiResponse<PermissionResponse> createPermission(@RequestBody PermissionRequest request) {
+        PermissionResponse permission = permissionService.createPermission(request);
+        return ApiResponse.<PermissionResponse>builder()
+                .results(permission)
+                .build();
+    }
+
+    @GetMapping()
+    public ApiResponse<List<PermissionResponse>> getUsers() {
+        List<PermissionResponse> permissions = permissionService.getPermissions();
+        return ApiResponse.<List<PermissionResponse>>builder()
+                .results(permissions)
+                .build();
+    }
+
+    @DeleteMapping("/{permissionName}")
+    public ApiResponse updateUser(@PathVariable("permissionName") String permissionName) {
+        permissionService.deletePermission(permissionName);
+        return ApiResponse.builder()
+                .message("Delete permission successfully.")
+                .build();
+    }
+}

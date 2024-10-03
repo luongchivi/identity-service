@@ -37,14 +37,15 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(
                 request -> request
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ROLE_Admin", "read") // kiểm tra xem token có 1 trong 2 role và permission này không để access vào endpoint
                         .anyRequest().authenticated()
         );
 
         httpSecurity.oauth2ResourceServer(
                 oauth2 -> oauth2.jwt(
-                        jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                                jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                                        .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        )
                         .authenticationEntryPoint(new JwtAuthenticationFailureHandler())
         );
 
@@ -75,7 +76,7 @@ public class SecurityConfig {
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);

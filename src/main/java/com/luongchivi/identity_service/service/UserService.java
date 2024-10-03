@@ -3,11 +3,12 @@ package com.luongchivi.identity_service.service;
 import com.luongchivi.identity_service.dto.request.user.UserCreationRequest;
 import com.luongchivi.identity_service.dto.request.user.UserUpdateRequest;
 import com.luongchivi.identity_service.dto.response.user.UserResponse;
+import com.luongchivi.identity_service.entity.Role;
 import com.luongchivi.identity_service.entity.User;
-import com.luongchivi.identity_service.enums.Role;
 import com.luongchivi.identity_service.exception.AppException;
 import com.luongchivi.identity_service.exception.ErrorCode;
 import com.luongchivi.identity_service.mapper.UserMapper;
+import com.luongchivi.identity_service.repository.RoleRepository;
 import com.luongchivi.identity_service.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,34 +33,45 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserService {
     UserRepository userRepository;
-
+    RoleRepository roleRepository;
     UserMapper userMapper;
-
     PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreationRequest request) {
+        // Check if the username already exists
         boolean existsByUsername = userRepository.existsByUsername(request.getUsername());
         if (existsByUsername) {
             throw new AppException(ErrorCode.USER_ALREADY_EXISTED);
         }
+
+        // Map request to user entity
         User user = userMapper.toUser(request);
 
+        // Encode the user's password
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
-        user.setRoles(roles);
+        // Fetch the "User" role
+        Role userRole = roleRepository.findById("User")
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
 
+        // Assign the "User" role to the user
+        user.setRoles(Set.of(userRole));
+
+        // Save the user and return the response
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<User> getUsers() {
+    // hasRole dùng để check ROLE
+    // @PreAuthorize("hasRole('Admin')")
+    // hasAuthority dùng để check PERMISSION
+    // dùng hasAnyAuthority("ROLE_Admin", "read") để check vừa có ROLE là ROLE_Admin, vừa có PERMISSION là read
+    @PreAuthorize("hasAuthority('read')")
+    public List<UserResponse> getUsers() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("Username: {}", authentication.getName());
         List<GrantedAuthority> roles = authentication.getAuthorities().stream().collect(Collectors.toList());
         log.info("Roles: {}", roles);
-        return userRepository.findAll();
+        return userRepository.findAll().stream().map(user -> userMapper.toUserResponse(user)).toList();
     }
 
     public UserResponse getUserInfo() {

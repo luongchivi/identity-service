@@ -14,7 +14,11 @@ public enum ErrorCode {
     USERNAME_TOO_SHORT(1005, "Username must be at least 10 characters", HttpStatus.BAD_REQUEST),
     PASSWORD_TOO_SHORT(1006, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1007, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    FORBIDDEN_ACCESS(1008, "You do not have permission to access this resource", HttpStatus.FORBIDDEN)
+    FORBIDDEN_ACCESS(1008, "You do not have permission to access this resource", HttpStatus.FORBIDDEN),
+    PERMISSION_ALREADY_EXISTED(1009, "Permission already existed", HttpStatus.BAD_REQUEST),
+    ROLE_ALREADY_EXISTED(1010, "Role already existed", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_FOUND(1011, "Role not found", HttpStatus.NOT_FOUND),
+    PERMISSION_NOT_FOUND(1012, "Permission not found", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message) {

@@ -1,11 +1,13 @@
 package com.luongchivi.identity_service.dto.response.user;
 
+import com.luongchivi.identity_service.dto.response.role.RoleResponse;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -17,5 +19,5 @@ public class UserResponse {
     String firstName;
     String lastName;
     LocalDate dateOfBirth;
-    Set<String> roles;
+    Set<RoleResponse> roles;
 }
