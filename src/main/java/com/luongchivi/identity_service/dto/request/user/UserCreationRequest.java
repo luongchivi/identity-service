@@ -1,5 +1,6 @@
 package com.luongchivi.identity_service.dto.request.user;
 
+import com.luongchivi.identity_service.validator.DateOfBirthConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,5 +20,6 @@ public class UserCreationRequest {
     String password;
     String firstName;
     String lastName;
+    @DateOfBirthConstraint(min = 18, message = "INVALID_DATE_OF_BIRTH")
     LocalDate dateOfBirth;
 }
