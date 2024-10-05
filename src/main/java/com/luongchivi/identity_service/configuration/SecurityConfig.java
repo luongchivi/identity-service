@@ -1,6 +1,8 @@
 package com.luongchivi.identity_service.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,28 +11,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SecurityConfig {
-
-    @Value("${jwt.signerKey}")
-    private String signerKey;
-
-    private final String[] PUBLIC_ENDPOINTS = {
+    final String[] PUBLIC_ENDPOINTS = {
             "/users",
             "/auth/login",
             "/auth/introspect",
+            "/auth/logout",
     };
+    CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -43,7 +41,7 @@ public class SecurityConfig {
 
         httpSecurity.oauth2ResourceServer(
                 oauth2 -> oauth2.jwt(
-                                jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                                jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)
                                         .jwtAuthenticationConverter(jwtAuthenticationConverter())
                         )
                         .authenticationEntryPoint(new JwtAuthenticationFailureHandler())
@@ -56,16 +54,6 @@ public class SecurityConfig {
         );
 
         return httpSecurity.build();
-    }
-
-    @Bean
-    JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
-
-        return NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
-                .macAlgorithm(MacAlgorithm.HS512)
-                .build();
     }
 
     @Bean
@@ -83,26 +71,4 @@ public class SecurityConfig {
 
         return jwtAuthenticationConverter;
     }
-
-//    @Bean
-//    public AccessDeniedHandler accessDeniedHandler() {
-//        return new AccessDeniedHandler() {
-//            @Override
-//            public void handle(HttpServletRequest request,
-//                               HttpServletResponse response,
-//                               AccessDeniedException accessDeniedException) throws IOException {
-//                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//
-//                ErrorCode errorCode = ErrorCode.UNAUTHORIZED; // Lấy mã lỗi tương ứng
-//
-//                Map<String, Object> jsonResponse = new HashMap<>();
-//                jsonResponse.put("code", errorCode.getCode());
-//                jsonResponse.put("message", errorCode.getMessage());
-//
-//                // Chuyển đổi Map thành JSON và ghi vào phản hồi
-//                new ObjectMapper().writeValue(response.getWriter(), jsonResponse);
-//            }
-//        };
-//    }
 }
