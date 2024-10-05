@@ -27,6 +27,7 @@ public class SecurityConfig {
             "/auth/login",
             "/auth/introspect",
             "/auth/logout",
+            "/auth/refresh-token",
     };
     CustomJwtDecoder customJwtDecoder;
 
