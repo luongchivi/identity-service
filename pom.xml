@@ -105,6 +105,16 @@
             <artifactId>mysql</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -160,6 +170,37 @@
                         <arg>-Amapstruct.defaultComponentModel=spring</arg>
                         <arg>-Amapstruct.verbose=true</arg>
                     </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <!-- Giai đoạn prepare-agent: JaCoCo sẽ gắn agent vào JVM để thu thập số liệu coverage -->
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <!-- Giai đoạn report: Tạo báo cáo coverage sau khi hoàn thành các bài test -->
+                    <!-- Cách chạy jacoco lấy report: mvnw test jacoco:report -->
+                    <!-- Xem JaCoCo test report ở trong file target/site/index.html mở bằng browser -->
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>com/luongchivi/identity_service/dto/**/</exclude>
+                        <exclude>com/luongchivi/identity_service/entity/**/</exclude>
+                        <exclude>com/luongchivi/identity_service/mapper/**/</exclude>
+                        <exclude>com/luongchivi/identity_service/configuration/**/</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
