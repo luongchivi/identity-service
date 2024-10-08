@@ -1,0 +1,4 @@
+jwt:
+  signerKey: ${SIGNER_KET_PRODUCTION:9e8iG4xN/Tz4mqu3pjH9pV5rXjwJGsa/IhnVn8LJ7CXumpMD2SDf6xJjLIfYYiR5}
+  valid-duration: 7200 # in seconds
+  refreshable-duration: 72000 # in seconds
