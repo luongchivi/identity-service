@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -40,12 +41,6 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreationRequest request) {
-        // Check if the username already exists
-        boolean existsByUsername = userRepository.existsByUsername(request.getUsername());
-        if (existsByUsername) {
-            throw new AppException(ErrorCode.USER_ALREADY_EXISTED);
-        }
-
         // Map request to user entity
         User user = userMapper.toUser(request);
 
@@ -58,8 +53,14 @@ public class UserService {
         // Assign the "User" role to the user
         user.setRoles(Set.of(userRole));
 
+        try {
+            user = userRepository.save(user);
+        } catch (DataIntegrityViolationException exception) {
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTED);
+        }
+
         // Save the user and return the response
-        return userMapper.toUserResponse(userRepository.save(user));
+        return userMapper.toUserResponse(user);
     }
 
     // hasRole dùng để check ROLE

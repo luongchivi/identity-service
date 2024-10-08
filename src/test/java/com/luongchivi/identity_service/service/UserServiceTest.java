@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 
@@ -79,11 +80,19 @@ public class UserServiceTest {
 
     @Test
     public void createUser_userExisted_failed() {
-        when(userRepository.existsByUsername(anyString())).thenReturn(true);
+        when(roleRepository.findById("User")).thenReturn(Optional.of(role));
 
+        // Giả lập việc ném ra DataIntegrityViolationException khi save user
+        when(userRepository.save(any()))
+                .thenThrow(
+                        new DataIntegrityViolationException("Duplicate entry 'luongchivi060399' for key 'username'"));
+
+        // Kiểm tra xem AppException có bị ném ra không
         var exception = assertThrows(AppException.class, () -> userService.createUser(request));
 
+        // Kiểm tra mã lỗi của AppException
         assertThat(exception.getErrorCode().getCode()).isEqualTo(1001);
+        assertThat(exception.getMessage()).isEqualTo("User already existed");
     }
 
     @Test
