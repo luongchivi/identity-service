@@ -1,9 +1,9 @@
 package com.luongchivi.identity_service.dto.request.user;
 
+import java.time.LocalDate;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter

@@ -1,13 +1,14 @@
 package com.luongchivi.identity_service.service;
 
-import com.luongchivi.identity_service.dto.request.user.UserCreationRequest;
-import com.luongchivi.identity_service.dto.response.user.UserResponse;
-import com.luongchivi.identity_service.entity.Role;
-import com.luongchivi.identity_service.entity.User;
-import com.luongchivi.identity_service.exception.AppException;
-import com.luongchivi.identity_service.exception.ErrorCode;
-import com.luongchivi.identity_service.repository.RoleRepository;
-import com.luongchivi.identity_service.repository.UserRepository;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import com.luongchivi.identity_service.dto.request.user.UserCreationRequest;
+import com.luongchivi.identity_service.dto.response.user.UserResponse;
+import com.luongchivi.identity_service.entity.Role;
+import com.luongchivi.identity_service.entity.User;
+import com.luongchivi.identity_service.exception.AppException;
+import com.luongchivi.identity_service.repository.RoleRepository;
+import com.luongchivi.identity_service.repository.UserRepository;
 
 @SpringBootTest
 @TestPropertySource("/test.properties")
@@ -36,6 +36,7 @@ public class UserServiceTest {
 
     @MockBean
     private RoleRepository roleRepository;
+
     private UserCreationRequest request;
     private User user;
     private LocalDate dateOfBirth;
@@ -61,10 +62,7 @@ public class UserServiceTest {
                 .dateOfBirth(dateOfBirth)
                 .build();
 
-        role = Role.builder()
-                .name("User")
-                .description("User role description")
-                .build();
+        role = Role.builder().name("User").description("User role description").build();
     }
 
     @Test

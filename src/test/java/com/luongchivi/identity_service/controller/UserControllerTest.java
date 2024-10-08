@@ -3,19 +3,10 @@ package com.luongchivi.identity_service.controller;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 
-import com.luongchivi.identity_service.configuration.CustomJwtDecoder;
-import com.luongchivi.identity_service.dto.request.user.UserCreationRequest;
-import com.luongchivi.identity_service.dto.response.user.UserResponse;
-import com.luongchivi.identity_service.entity.Permission;
-import com.luongchivi.identity_service.entity.Role;
-import com.luongchivi.identity_service.entity.User;
-import com.luongchivi.identity_service.service.UserService;
-import lombok.experimental.NonFinal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -31,12 +22,19 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.luongchivi.identity_service.configuration.CustomJwtDecoder;
+import com.luongchivi.identity_service.dto.request.user.UserCreationRequest;
+import com.luongchivi.identity_service.dto.response.user.UserResponse;
+import com.luongchivi.identity_service.entity.Permission;
+import com.luongchivi.identity_service.entity.Role;
+import com.luongchivi.identity_service.entity.User;
+import com.luongchivi.identity_service.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @SpringBootTest

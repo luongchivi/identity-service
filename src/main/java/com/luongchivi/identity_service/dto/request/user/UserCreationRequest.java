@@ -1,11 +1,13 @@
 package com.luongchivi.identity_service.dto.request.user;
 
-import com.luongchivi.identity_service.validator.DateOfBirthConstraint;
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.Size;
+
+import com.luongchivi.identity_service.validator.DateOfBirthConstraint;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,10 +18,13 @@ import java.time.LocalDate;
 public class UserCreationRequest {
     @Size(min = 8, message = "USERNAME_TOO_SHORT")
     String username;
+
     @Size(min = 8, message = "PASSWORD_TOO_SHORT")
     String password;
+
     String firstName;
     String lastName;
+
     @DateOfBirthConstraint(min = 18, message = "INVALID_DATE_OF_BIRTH")
     LocalDate dateOfBirth;
 }

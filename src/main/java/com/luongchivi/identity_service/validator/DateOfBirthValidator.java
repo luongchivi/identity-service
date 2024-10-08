@@ -1,11 +1,11 @@
 package com.luongchivi.identity_service.validator;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class DateOfBirthValidator implements ConstraintValidator<DateOfBirthConstraint, LocalDate> {
     private int min;

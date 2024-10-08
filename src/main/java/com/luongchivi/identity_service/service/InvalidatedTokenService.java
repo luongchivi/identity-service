@@ -1,13 +1,15 @@
 package com.luongchivi.identity_service.service;
 
+import java.util.Date;
+
+import org.springframework.stereotype.Service;
+
 import com.luongchivi.identity_service.repository.InvalidatedTokenRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor

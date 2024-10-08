@@ -1,17 +1,20 @@
 package com.luongchivi.identity_service.controller;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.luongchivi.identity_service.dto.request.user.UserCreationRequest;
 import com.luongchivi.identity_service.dto.request.user.UserUpdateRequest;
 import com.luongchivi.identity_service.dto.response.user.UserResponse;
 import com.luongchivi.identity_service.service.UserService;
 import com.luongchivi.identity_service.share.response.ApiResponse;
-import jakarta.validation.Valid;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -29,9 +32,7 @@ public class UserController {
     @GetMapping()
     public ApiResponse<List<UserResponse>> getUsers() {
         List<UserResponse> users = userService.getUsers();
-        return ApiResponse.<List<UserResponse>>builder()
-                .results(users)
-                .build();
+        return ApiResponse.<List<UserResponse>>builder().results(users).build();
     }
 
     @GetMapping("/info")
@@ -47,7 +48,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ApiResponse<UserResponse> updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUser(
+            @PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
         UserResponse user = userService.updateUser(userId, request);
         return ApiResponse.<UserResponse>builder().results(user).build();
     }
@@ -55,8 +57,6 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ApiResponse deleteUser(@PathVariable("userId") String userId) {
         userService.deleteUser(userId);
-        return ApiResponse.builder()
-                .message("Delete user successfully.")
-                .build();
+        return ApiResponse.builder().message("Delete user successfully.").build();
     }
 }
