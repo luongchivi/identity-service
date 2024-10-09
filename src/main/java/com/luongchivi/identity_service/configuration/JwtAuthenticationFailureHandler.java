@@ -14,11 +14,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luongchivi.identity_service.exception.ErrorCode;
 import com.luongchivi.identity_service.share.response.ApiResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class JwtAuthenticationFailureHandler implements AuthenticationEntryPoint {
     @Override
     public void commence(
             HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {
+        log.error("Unauthenticated handler triggered for request: {}", request.getRequestURI());
+
         ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
         response.setStatus(errorCode.getHttpStatusCode().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

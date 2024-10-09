@@ -30,19 +30,20 @@ public class SecurityConfig {
     };
 
     final String[] SWAGGER_WHITELIST = {
-            "/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**"
+        "/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**"
     };
 
     CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request -> request
-                .requestMatchers(SWAGGER_WHITELIST).permitAll()
+        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(SWAGGER_WHITELIST)
+                .permitAll()
                 .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/users")
-                .hasAnyAuthority("ROLE_Admin", "read") // kiểm tra xem token có 1 trong 2 role và permission này không để access vào endpoint
+                // kiểm tra xem token có 1 trong 2 role và permission này không để access vào endpoint
+                .hasAnyAuthority("ROLE_Admin", "read")
                 .anyRequest()
                 .authenticated());
 
@@ -52,9 +53,6 @@ public class SecurityConfig {
                 .authenticationEntryPoint(new JwtAuthenticationFailureHandler()));
 
         httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
-
-        httpSecurity.exceptionHandling(
-                exceptionHandling -> exceptionHandling.accessDeniedHandler(new JwtAccessDeniedHandler()));
 
         return httpSecurity.build();
     }

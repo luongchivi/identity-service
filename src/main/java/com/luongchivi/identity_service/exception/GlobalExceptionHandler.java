@@ -7,6 +7,7 @@ import java.util.Objects;
 import jakarta.validation.ConstraintViolation;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +28,15 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_ERROR.getCode());
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_ERROR.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException exception) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setCode(ErrorCode.FORBIDDEN_ACCESS.getCode());
+        apiResponse.setMessage(ErrorCode.FORBIDDEN_ACCESS.getMessage());
+        return ResponseEntity.status(ErrorCode.FORBIDDEN_ACCESS.getHttpStatusCode())
+                .body(apiResponse);
     }
 
     @ExceptionHandler(value = AppException.class)

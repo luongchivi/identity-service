@@ -2,9 +2,6 @@ package com.luongchivi.identity_service.controller;
 
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +12,9 @@ import com.luongchivi.identity_service.dto.response.user.UserResponse;
 import com.luongchivi.identity_service.service.UserService;
 import com.luongchivi.identity_service.share.response.ApiResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,12 +30,8 @@ public class UserController {
     @Operation(
             summary = "This endpoint create new user",
             responses = {
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                            description = "Success",
-                            responseCode = "200"
-                    )
-            }
-    )
+                @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Success", responseCode = "200")
+            })
     @PostMapping()
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
         UserResponse user = userService.createUser(request);

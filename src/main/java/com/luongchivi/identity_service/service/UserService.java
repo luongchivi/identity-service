@@ -65,9 +65,9 @@ public class UserService {
 
     // hasRole dùng để check ROLE
     // @PreAuthorize("hasRole('Admin')")
-    // hasAuthority dùng để check PERMISSION
+    // hasAuthority dùng để check trong Scope có trùng với PERMISSION và ROLE input
     // dùng hasAnyAuthority("ROLE_Admin", "read") để check vừa có ROLE là ROLE_Admin, vừa có PERMISSION là read
-    @PreAuthorize("hasRole('ROLE_Admin')")
+    @PreAuthorize("hasRole('Admin')")
     public List<UserResponse> getUsers() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("Username: {}", authentication.getName());
@@ -78,15 +78,17 @@ public class UserService {
                 .toList();
     }
 
+    @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse getUserInfo() {
         SecurityContext context = SecurityContextHolder.getContext();
         String username = context.getAuthentication().getName();
-        User user =
-                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         return userMapper.toUserResponse(user);
     }
 
-    @PostAuthorize("returnObject.username == authentication.name")
+    // kiểm tra xem token scope có ROLE là Admin không hoặc là
+    // kết quả trả về từ phương thức trùng username với username trong token đã authentication
+    @PostAuthorize("hasRole('Admin') or returnObject.username == authentication.name")
     public UserResponse getUser(String userId) {
         return userMapper.toUserResponse(
                 userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));

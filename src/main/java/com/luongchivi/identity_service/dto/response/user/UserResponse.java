@@ -5,15 +5,13 @@ import java.util.Set;
 
 import com.luongchivi.identity_service.dto.response.role.RoleResponse;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
     String id;

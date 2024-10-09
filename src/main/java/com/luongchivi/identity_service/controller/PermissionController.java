@@ -2,7 +2,6 @@ package com.luongchivi.identity_service.controller;
 
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import com.luongchivi.identity_service.dto.request.permission.PermissionRequest;
@@ -10,6 +9,7 @@ import com.luongchivi.identity_service.dto.response.permission.PermissionRespons
 import com.luongchivi.identity_service.service.PermissionService;
 import com.luongchivi.identity_service.share.response.ApiResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

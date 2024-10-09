@@ -68,7 +68,7 @@ public class UserServiceTest {
 
     @Test
     public void createUser_validRequest_success() {
-        when(userRepository.existsByUsername(anyString())).thenReturn(false);
+        when(userRepository.existsByUsername(user.getUsername())).thenReturn(false);
         when(roleRepository.findById("User")).thenReturn(Optional.of(role));
         when(userRepository.save(any())).thenReturn(user);
 
@@ -83,9 +83,7 @@ public class UserServiceTest {
         when(roleRepository.findById("User")).thenReturn(Optional.of(role));
 
         // Giả lập việc ném ra DataIntegrityViolationException khi save user
-        when(userRepository.save(any()))
-                .thenThrow(
-                        new DataIntegrityViolationException("Duplicate entry 'luongchivi060399' for key 'username'"));
+        when(userRepository.save(any())).thenThrow(new DataIntegrityViolationException("Duplicate entry 'luongchivi060399' for key 'username'"));
 
         // Kiểm tra xem AppException có bị ném ra không
         var exception = assertThrows(AppException.class, () -> userService.createUser(request));
@@ -115,6 +113,27 @@ public class UserServiceTest {
         var exception = assertThrows(AppException.class, () -> userService.getUserInfo());
 
         // Kiểm tra mã lỗi của AppException
+        assertThat(exception.getErrorCode().getCode()).isEqualTo(1003);
+        assertThat(exception.getMessage()).isEqualTo("User not found");
+    }
+
+    @Test
+    @WithMockUser(username = "luongchivi060399")
+    void getUser_validRequest_success() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        UserResponse userResponse = userService.getUser(user.getId());
+        assertThat(userResponse.getId()).isEqualTo("e570ddff-76fc-4fb0-adf0-8979a57d3d76");
+        assertThat(userResponse.getUsername()).isEqualTo("luongchivi060399");
+    }
+
+    @Test
+    @WithMockUser(username = "luongchivi060399")
+    public void getUser_userNotExisted_failed() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
+
+        var exception = assertThrows(AppException.class, () -> userService.getUser(user.getId()));
+
         assertThat(exception.getErrorCode().getCode()).isEqualTo(1003);
         assertThat(exception.getMessage()).isEqualTo("User not found");
     }
