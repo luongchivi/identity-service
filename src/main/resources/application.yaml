@@ -30,3 +30,10 @@ logging:
 #    com.luongchivi: DEBUG  # Log chi tiết cho package của bạn
 #  pattern:
 #    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n%wEx"  # Định dạng log và in chi tiết stack trace khi có lỗi
+
+# http://localhost:8080/identity/swagger-ui/index.html
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

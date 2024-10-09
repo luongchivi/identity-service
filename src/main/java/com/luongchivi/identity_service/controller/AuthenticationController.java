@@ -2,6 +2,7 @@ package com.luongchivi.identity_service.controller;
 
 import java.text.ParseException;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import lombok.experimental.FieldDefaults;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Authenticate")
 public class AuthenticationController {
     AuthenticationService authenticationService;
 

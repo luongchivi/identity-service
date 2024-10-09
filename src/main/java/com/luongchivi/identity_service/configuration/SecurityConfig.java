@@ -28,16 +28,21 @@ public class SecurityConfig {
     final String[] PUBLIC_ENDPOINTS = {
         "/users", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh-token",
     };
+
+    final String[] SWAGGER_WHITELIST = {
+            "/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**"
+    };
+
     CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+        httpSecurity.authorizeHttpRequests(request -> request
+                .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/users")
-                .hasAnyAuthority(
-                        "ROLE_Admin",
-                        "read") // kiểm tra xem token có 1 trong 2 role và permission này không để access vào endpoint
+                .hasAnyAuthority("ROLE_Admin", "read") // kiểm tra xem token có 1 trong 2 role và permission này không để access vào endpoint
                 .anyRequest()
                 .authenticated());
 

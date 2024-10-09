@@ -2,6 +2,7 @@ package com.luongchivi.identity_service.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import com.luongchivi.identity_service.dto.request.role.RoleRequest;
@@ -17,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @RequestMapping("/roles")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Tag(name = "Role")
 public class RoleController {
     RoleService roleService;
 

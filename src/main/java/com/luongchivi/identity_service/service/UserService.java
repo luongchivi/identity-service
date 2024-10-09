@@ -67,7 +67,7 @@ public class UserService {
     // @PreAuthorize("hasRole('Admin')")
     // hasAuthority dùng để check PERMISSION
     // dùng hasAnyAuthority("ROLE_Admin", "read") để check vừa có ROLE là ROLE_Admin, vừa có PERMISSION là read
-    @PreAuthorize("hasAuthority('read')")
+    @PreAuthorize("hasRole('ROLE_Admin')")
     public List<UserResponse> getUsers() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("Username: {}", authentication.getName());

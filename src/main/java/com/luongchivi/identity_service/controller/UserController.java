@@ -2,6 +2,9 @@ package com.luongchivi.identity_service.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -20,21 +23,34 @@ import lombok.experimental.FieldDefaults;
 @RequestMapping("/users")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Tag(name = "User")
 public class UserController {
     UserService userService;
 
+    @Operation(
+            summary = "This endpoint create new user",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    )
+            }
+    )
     @PostMapping()
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
         UserResponse user = userService.createUser(request);
         return ApiResponse.<UserResponse>builder().results(user).build();
     }
 
+    @Operation(summary = "This endpoint get list users")
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping()
     public ApiResponse<List<UserResponse>> getUsers() {
         List<UserResponse> users = userService.getUsers();
         return ApiResponse.<List<UserResponse>>builder().results(users).build();
     }
 
+    @Operation(summary = "This endpoint get user details information")
     @GetMapping("/info")
     public ApiResponse<UserResponse> getUserInfo() {
         UserResponse userInfo = userService.getUserInfo();

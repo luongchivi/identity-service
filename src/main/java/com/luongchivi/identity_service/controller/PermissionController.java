@@ -2,6 +2,7 @@ package com.luongchivi.identity_service.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import com.luongchivi.identity_service.dto.request.permission.PermissionRequest;
@@ -17,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @RequestMapping("/permissions")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Tag(name = "Permission")
 public class PermissionController {
     PermissionService permissionService;
 
