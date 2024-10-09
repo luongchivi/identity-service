@@ -11,9 +11,6 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 
-import com.luongchivi.identity_service.dto.request.user.UserUpdateRequest;
-import com.luongchivi.identity_service.dto.response.permission.PermissionResponse;
-import com.luongchivi.identity_service.dto.response.role.RoleResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +30,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.luongchivi.identity_service.configuration.CustomJwtDecoder;
 import com.luongchivi.identity_service.dto.request.user.UserCreationRequest;
+import com.luongchivi.identity_service.dto.request.user.UserUpdateRequest;
+import com.luongchivi.identity_service.dto.response.permission.PermissionResponse;
+import com.luongchivi.identity_service.dto.response.role.RoleResponse;
 import com.luongchivi.identity_service.dto.response.user.UserResponse;
 import com.luongchivi.identity_service.entity.Permission;
 import com.luongchivi.identity_service.entity.Role;
@@ -216,8 +216,7 @@ class UserControllerTest {
     void getUserInfo_AccessDenied_failed() throws Exception {
         when(userService.getUserInfo()).thenReturn(null);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/info")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/info").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("Unauthenticated"));
     }
@@ -239,8 +238,10 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("results.firstName").value("Vi"))
                 .andExpect(MockMvcResultMatchers.jsonPath("results.lastName").value("Luong Chi"))
                 .andExpect(MockMvcResultMatchers.jsonPath("results.dateOfBirth").value(dateOfBirth.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("results.roles[0].name").value("User"))
-                .andExpect(MockMvcResultMatchers.jsonPath("results.roles[0].permissions[0].name").value("read"));
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("results.roles[0].name").value("User"))
+                .andExpect(MockMvcResultMatchers.jsonPath("results.roles[0].permissions[0].name")
+                        .value("read"));
     }
 
     @Test
@@ -276,7 +277,9 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("results.firstName").value("Bar"))
                 .andExpect(MockMvcResultMatchers.jsonPath("results.lastName").value("Foo"))
                 .andExpect(MockMvcResultMatchers.jsonPath("results.dateOfBirth").value(dateOfBirth.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("results.roles[0].name").value("User"))
-                .andExpect(MockMvcResultMatchers.jsonPath("results.roles[0].permissions[0].name").value("read"));
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("results.roles[0].name").value("User"))
+                .andExpect(MockMvcResultMatchers.jsonPath("results.roles[0].permissions[0].name")
+                        .value("read"));
     }
 }

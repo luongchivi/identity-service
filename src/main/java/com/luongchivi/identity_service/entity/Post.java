@@ -1,6 +1,6 @@
 package com.luongchivi.identity_service.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -15,26 +15,28 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User extends BaseEntity {
+public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @Column(unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci", nullable = false)
-    String username;
+    @Column(nullable = false)
+    String title;
 
     @Column(nullable = false)
-    String password;
+    String content;
 
-    String firstName;
+    @Column(nullable = false)
+    String slug;
 
-    String lastName;
+    LocalDateTime publicationDate;
 
-    LocalDate dateOfBirth;
+    @OneToOne
+    User author;
 
     @ManyToMany
-    Set<Role> roles;
+    Set<Category> categories;
 
-    @OneToMany
-    Set<Post> posts;
+    @ManyToMany
+    Set<Tag> tags;
 }

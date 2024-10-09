@@ -24,7 +24,7 @@ public class InvalidatedTokenCleanupJob {
         try {
             log.info("Running token cleanup job");
             invalidatedTokenService.deleteExpiredTokens();
-            log.info("Token cleanup job completed successfully");
+            log.info("Cleanup expired tokens completed");
         } catch (Exception e) {
             log.error("Failed to run token cleanup job", e);
         }

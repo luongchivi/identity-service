@@ -1,7 +1,6 @@
 package com.luongchivi.identity_service.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,9 +12,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Permission extends BaseEntity {
+public class Tag extends BaseEntity {
     @Id
-    String name;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
-    String description;
+    @Column(nullable = false)
+    String name;
 }

@@ -2,6 +2,8 @@ package com.luongchivi.identity_service.service;
 
 import java.util.Date;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.luongchivi.identity_service.repository.InvalidatedTokenRepository;
@@ -19,12 +21,14 @@ public class InvalidatedTokenService {
 
     InvalidatedTokenRepository invalidatedTokenRepository;
 
+    @Transactional
     public void deleteExpiredTokens() {
-        Date now = new Date();
-        var expiredTokens = invalidatedTokenRepository.findByExpiryTimeBefore(now);
+        var expiredTokens = invalidatedTokenRepository.findByExpiryTimeBefore(new Date());
         if (!expiredTokens.isEmpty()) {
             invalidatedTokenRepository.deleteAll(expiredTokens);
-            log.info("Deleted " + expiredTokens.size() + " expired tokens.");
+            log.info("Deleted {} expired tokens", expiredTokens.size());
+        } else {
+            log.info("None expired tokens");
         }
     }
 }

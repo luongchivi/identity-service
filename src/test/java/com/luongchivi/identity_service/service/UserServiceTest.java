@@ -3,7 +3,6 @@ package com.luongchivi.identity_service.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -83,7 +82,9 @@ public class UserServiceTest {
         when(roleRepository.findById("User")).thenReturn(Optional.of(role));
 
         // Giả lập việc ném ra DataIntegrityViolationException khi save user
-        when(userRepository.save(any())).thenThrow(new DataIntegrityViolationException("Duplicate entry 'luongchivi060399' for key 'username'"));
+        when(userRepository.save(any()))
+                .thenThrow(
+                        new DataIntegrityViolationException("Duplicate entry 'luongchivi060399' for key 'username'"));
 
         // Kiểm tra xem AppException có bị ném ra không
         var exception = assertThrows(AppException.class, () -> userService.createUser(request));
