@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 
+import com.luongchivi.identity_service.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,6 @@ import com.luongchivi.identity_service.dto.response.user.UserResponse;
 import com.luongchivi.identity_service.entity.Permission;
 import com.luongchivi.identity_service.entity.Role;
 import com.luongchivi.identity_service.entity.User;
-import com.luongchivi.identity_service.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 

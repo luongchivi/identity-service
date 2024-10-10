@@ -15,7 +15,7 @@ spring:
     driver-class-name: "com.mysql.cj.jdbc.Driver"
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
 
 jwt:
@@ -23,9 +23,9 @@ jwt:
   valid-duration: 3600 # in seconds
   refreshable-duration: 36000 # in seconds
 
-#logging:
-#  level:
-#    root: DEBUG  # Thiết lập mức log mặc định cho toàn ứng dụng là DEBUG
+logging:
+  level:
+    root: DEBUG  # Thiết lập mức log mặc định cho toàn ứng dụng là DEBUG
 #    org.springframework: DEBUG  # Log chi tiết cho các lớp của Spring framework
 #    com.luongchivi: DEBUG  # Log chi tiết cho package của bạn
 #  pattern:

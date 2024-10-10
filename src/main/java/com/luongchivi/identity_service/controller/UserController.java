@@ -1,9 +1,11 @@
 package com.luongchivi.identity_service.controller;
 
-import java.util.List;
 
+import com.luongchivi.identity_service.share.response.PageResponse;
 import jakarta.validation.Valid;
 
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.luongchivi.identity_service.dto.request.user.UserCreationRequest;
@@ -24,6 +26,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Tag(name = "User")
+@Validated
 public class UserController {
     UserService userService;
 
@@ -41,9 +44,14 @@ public class UserController {
     @Operation(summary = "This endpoint get list users")
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping()
-    public ApiResponse<List<UserResponse>> getUsers() {
-        List<UserResponse> users = userService.getUsers();
-        return ApiResponse.<List<UserResponse>>builder().results(users).build();
+    public ApiResponse<PageResponse<UserResponse>> getUsers(
+            @RequestParam(value = "page", required = false, defaultValue = "1") @Min(value = 1, message = "PAGE_INVALID") int page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") @Min(value = 1, message = "PAGE_SIZE_INVALID") int pageSize,
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sort,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy
+    ) {
+        PageResponse<UserResponse> users = userService.getUsers(page, pageSize, sort, sortBy);
+        return ApiResponse.<PageResponse<UserResponse>>builder().results(users).build();
     }
 
     @Operation(summary = "This endpoint get user details information")

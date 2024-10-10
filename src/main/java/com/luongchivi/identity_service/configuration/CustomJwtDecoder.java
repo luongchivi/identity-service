@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.luongchivi.identity_service.dto.request.Introspect.IntrospectRequest;
 import com.luongchivi.identity_service.dto.request.Introspect.IntrospectResponse;
-import com.luongchivi.identity_service.service.AuthenticationService;
+import com.luongchivi.identity_service.service.impl.AuthenticationServiceImpl;
 import com.nimbusds.jose.JOSEException;
 
 import lombok.AccessLevel;
@@ -26,24 +26,24 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Value("${jwt.signerKey}")
     String signerKey;
 
-    AuthenticationService authenticationService;
+    AuthenticationServiceImpl authenticationServiceImpl;
 
     NimbusJwtDecoder nimbusJwtDecoder = null;
 
-    public CustomJwtDecoder(AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
+    public CustomJwtDecoder(AuthenticationServiceImpl authenticationService) {
+        this.authenticationServiceImpl = authenticationService;
     }
 
     @Override
     public Jwt decode(String token) throws JwtException {
         try {
-            IntrospectResponse introspectResponse = authenticationService.introspect(
+            IntrospectResponse introspectResponse = authenticationServiceImpl.introspect(
                     IntrospectRequest.builder().token(token).build());
 
             if (!introspectResponse.isValid()) {
                 throw new JwtException("Token invalid");
             }
-        } catch (JOSEException | ParseException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 

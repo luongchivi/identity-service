@@ -1,9 +1,8 @@
 package com.luongchivi.identity_service.job;
 
+import com.luongchivi.identity_service.service.InvalidatedTokenService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import com.luongchivi.identity_service.service.InvalidatedTokenService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

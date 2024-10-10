@@ -21,12 +21,10 @@ public enum ErrorCode {
     ROLE_NOT_FOUND(1011, "Role not found", HttpStatus.NOT_FOUND),
     PERMISSION_NOT_FOUND(1012, "Permission not found", HttpStatus.NOT_FOUND),
     INVALID_DATE_OF_BIRTH(1013, "Invalid date of birth, your age must be at least {min}", HttpStatus.BAD_REQUEST),
+    PAGE_INVALID(1015, "page must be greater than one", HttpStatus.BAD_REQUEST),
+    PAGE_SIZE_INVALID(1014, "pageSize must be greater than one", HttpStatus.BAD_REQUEST),
+    BAD_REQUEST(1015, "Bad request", HttpStatus.BAD_REQUEST),
     ;
-
-    ErrorCode(int code, String message) {
-        this.code = code;
-        this.message = message;
-    }
 
     private int code;
     private String message;

@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import jakarta.validation.ConstraintViolation;
 
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,6 +29,28 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_ERROR.getCode());
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_ERROR.getMessage());
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    ResponseEntity<ApiResponse> handleConstraintViolationException(ConstraintViolationException exception) {
+        var message = exception.getMessage();
+        String[] messageKey = message.split(" ");
+        ErrorCode errorCode = ErrorCode.valueOf(messageKey[1].replace(",", ""));
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setCode(ErrorCode.BAD_REQUEST.getCode());
+        apiResponse.setMessage(errorCode.getMessage());
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(value = {
+            PropertyReferenceException.class,
+            IllegalArgumentException.class
+    })
+    public ResponseEntity<ApiResponse> handlePropertyReferenceExceptionAndIllegalArgumentException(Exception exception) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setCode(ErrorCode.BAD_REQUEST.getCode());
+        apiResponse.setMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
