@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /identity
+
+spring:
+  application:
+    name: identity-service
+  profiles:
+    active: "production"
+  datasource:
+    url: ${BD_URL:jdbc:mysql://localhost:3306/identity_service}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:060399}
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+
+jwt:
+  signerKey: ${SIGNER_KET_DEV:XbMzESgyD0cAdQVJ4QpQ/Jrc4fo3gyzAyd0AnbvNKT8noPFU+A2CWKEGRXMxI8ig}
+  valid-duration: 3600 # in seconds
+  refreshable-duration: 36000 # in seconds
+
+logging:
+  level:
+    root: DEBUG  # Thiết lập mức log mặc định cho toàn ứng dụng là DEBUG
+#    org.springframework: DEBUG  # Log chi tiết cho các lớp của Spring framework
+#    com.luongchivi: DEBUG  # Log chi tiết cho package của bạn
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n%wEx"  # Định dạng log và in chi tiết stack trace khi có lỗi
+
+# http://localhost:8080/identity/swagger-ui/index.html
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
